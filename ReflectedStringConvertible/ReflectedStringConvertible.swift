@@ -108,11 +108,17 @@ extension ReflectedStringConvertible {
   }
   
   /// A `JSON` style detailed textual representation of `self`.
-  fileprivate var jsonDescription: String {
-    let dictionary = self.dictionary(Mirror(reflecting: self).allChildren)
-    let data = try! JSONSerialization.data(withJSONObject: dictionary, options: [.prettyPrinted, .sortedKeys])
-    return String(data: data, encoding: String.Encoding.utf8)!
-  }
+	fileprivate var jsonDescription: String {
+		let dictionary = self.dictionary(Mirror(reflecting: self).allChildren)
+		if #available(iOS 11.0, *) {
+			let data = try! JSONSerialization.data(withJSONObject: dictionary, options: [.prettyPrinted, .sortedKeys])
+			return String(data: data, encoding: String.Encoding.utf8)!
+		} else {
+			// Fallback on earlier versions
+			let data = try! JSONSerialization.data(withJSONObject: dictionary, options: [.prettyPrinted])
+			return String(data: data, encoding: String.Encoding.utf8)!
+		}
+	}
   
   /// A dictionary representation of a `Mirror`'s children. Any child that conforms to `ReflectedStringConvertible` is
   /// handled recursively.
