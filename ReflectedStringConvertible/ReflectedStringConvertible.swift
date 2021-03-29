@@ -92,7 +92,7 @@ extension ReflectedStringConvertible {
   public var description: String {
     let mirror = Mirror(reflecting: self)
     
-    let descriptions: [String] = mirror.allChildren.flatMap { (label: String?, value: Any) in
+		let descriptions: [String] = mirror.allChildren.compactMap { (label: String?, value: Any) in
       if let label = label {
         var value = value
         if value is String {
